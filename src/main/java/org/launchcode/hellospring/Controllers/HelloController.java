@@ -1,11 +1,13 @@
 package org.launchcode.hellospring.Controllers;
 
+
+import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @Controller
-@ResponseBody
-@RequestMapping("hello")
 public class HelloController {
     //handle request at path http://localhost:8080/hello
 
@@ -22,28 +24,35 @@ public class HelloController {
     }
 
     //handle requests of the form http://localhost:8080/hello?name=LaunchCode
-    @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
-    public String helloWithQueryParam(@RequestParam String name){
-        return "Hello, " + name + "!";
+    @RequestMapping(value = "hello", method = {RequestMethod.GET, RequestMethod.POST})
+    public String helloQuery(@RequestParam String name, Model model){
+        String greeting = "Hello, " + name + "!";
+        model.addAttribute("greeting", greeting);
+        return "hello";
     }
 
     //handle requests of the form http://localhost:8080/hello/LaunchCode
     @GetMapping("{name}")
-    public String helloWithPathParam(@PathVariable String name){
-        return "Hello, " + name + "!";
+    public String helloPath(@PathVariable String name, Model model){
+        String greeting = "Hello, " + name + "!";
+        model.addAttribute("greeting", greeting);
+        return "hello";
     }
 
     //handles requests for http://localhost:8080/hello/form
     @GetMapping("form")
     public String helloForm() {
-        return "<html>" +
-                "<body>" +
-                "<form action = '/hello' method = 'post'>" + // submit a request to /hello
-                "<input type = 'text' name = 'name' >" +
-                "<input type = 'submit' value = 'Greet Me!' >" +
-                "</form>" +
-                "</body>" +
-                "</html>";
+        return "form";
+    }
+
+    @GetMapping("hello-names")
+    public String helloNames(Model model) {
+        ArrayList<String> names = new ArrayList<>();
+        names.add("Kyle");
+        names.add("Kyle2");
+        names.add("Cooler Kyle");
+        model.addAttribute("names", names);
+        return "hello-list";
     }
 
 }
